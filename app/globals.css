@@ -1,26 +1,1013 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-night: #0a2a6e;
+  --color-snow: #f1fff9;
+  --color-haze: #a8dcd3;
+  --color-mint: #7df3c8;
+  --color-coral: #ff8f80;
+  --color-pine: #06414a;
+  --font-sans: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
+  --font-round: var(--font-fredoka), ui-rounded, system-ui, sans-serif;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+:root {
+  --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+  --spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+  color-scheme: dark;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  color: var(--color-snow);
+  background: var(--color-night);
+}
+
+::selection {
+  background: var(--color-mint);
+  color: var(--color-pine);
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-snow);
+  outline-offset: 3px;
+}
+
+/* The world: deep space and a 2:3 scene standing on the bottom edge. */
+
+.world {
+  --vh: max(100svh, 560px);
+  --h: min(var(--vh) - 104px, 150vw);
+  --px: 0;
+  --py: 0;
+  height: var(--vh);
+  background: linear-gradient(#0a0620 0%, #170d40 28%, #14235e 58%, #0f4a6c 86%, #116a78 100%);
+  position: relative;
+  overflow: hidden;
+}
+
+/* Space: nebulae, a field of stars, glass planets, and the world underfoot. */
+
+.space,
+.field {
+  position: absolute;
+  inset: 0;
+}
+
+.field {
+  width: 100%;
+  height: 100%;
+  translate: calc(var(--px) * 4px) calc(var(--py) * 3px);
+  transition: translate 0.9s var(--ease-out);
+}
+
+.nebula {
+  filter: blur(50px);
+  border-radius: 50%;
+  animation: drift 46s ease-in-out infinite alternate;
+  position: absolute;
+}
+
+.n1 {
+  background: radial-gradient(closest-side, rgb(214 70 150 / 0.5), transparent);
+  width: 62vmax;
+  height: 40vmax;
+  top: -8%;
+  left: -14%;
+}
+
+.n2 {
+  background: radial-gradient(closest-side, rgb(60 200 205 / 0.4), transparent);
+  width: 58vmax;
+  height: 44vmax;
+  animation-duration: 58s;
+  animation-direction: alternate-reverse;
+  top: 30%;
+  right: -18%;
+}
+
+.n3 {
+  background: radial-gradient(closest-side, rgb(246 130 100 / 0.3), transparent);
+  width: 46vmax;
+  height: 30vmax;
+  animation-duration: 64s;
+  bottom: 2%;
+  left: 6%;
+}
+
+.shoot {
+  opacity: 0;
+  background: linear-gradient(90deg, #fff, rgb(168 240 220 / 0.6) 30%, transparent);
+  border-radius: 2px;
+  width: 130px;
+  height: 2px;
+  transform: rotate(-27deg);
+  animation: shoot 11s linear infinite;
+  position: absolute;
+}
+
+.s1 {
+  top: 12%;
+  left: 62%;
+}
+
+.s2 {
+  animation-delay: 4.2s;
+  top: 34%;
+  left: 30%;
+}
+
+.s3 {
+  animation-delay: 7.6s;
+  top: 6%;
+  left: 92%;
+}
+
+.planet {
+  --size: clamp(60px, 8vw, 120px);
+  width: var(--size);
+  height: var(--size);
+  translate: calc(var(--px) * var(--depth, 14) * 1px) calc(var(--py) * var(--depth, 14) * 0.7px);
+  transition: translate 0.8s var(--ease-out);
+  animation: bob 9s ease-in-out infinite alternate;
+  position: absolute;
+}
+
+.planet i {
+  display: block;
+  position: absolute;
+}
+
+.body {
+  background: radial-gradient(circle at 34% 28%, #d2f7f0, #5cc6d2 34%, #a8d9c6 60%, #f6b38a);
+  border-radius: 50%;
+  box-shadow:
+    inset 0 0 0 2px rgb(23 70 92 / 0.5),
+    inset -10px -12px 22px rgb(10 20 70 / 0.45),
+    0 0 34px rgb(120 230 225 / 0.3);
+  inset: 0;
+}
+
+.ringed {
+  --size: clamp(84px, 11vw, 168px);
+  --depth: 20;
+  top: 50%;
+  left: 8%;
+}
+
+.ring {
+  border: calc(var(--size) * 0.045) solid #f4776a;
+  border-radius: 50%;
+  box-shadow: 0 0 0 1.5px #c9423f;
+  inset: 29% -42%;
+  transform: rotate(-18deg);
+}
+
+.ring.front {
+  clip-path: inset(50% -4px -4px);
+}
+
+.warm {
+  --depth: 12;
+  animation-duration: 11s;
+  top: 13%;
+  right: 8%;
+}
+
+.warm .body {
+  background: radial-gradient(circle at 34% 28%, #ffe6cc, #f6b38a 36%, #ef7a68 68%, #9c2f4c);
+  box-shadow:
+    inset 0 0 0 2px rgb(110 30 50 / 0.5),
+    inset -10px -12px 22px rgb(40 10 60 / 0.45),
+    0 0 34px rgb(246 150 110 / 0.35);
+}
+
+.moon {
+  background: radial-gradient(circle at 34% 28%, #fff, #a8d9c6);
+  border-radius: 50%;
+  box-shadow: inset 0 0 0 1.5px rgb(23 70 92 / 0.5);
+  width: 18%;
+  height: 18%;
+  top: 41%;
+  left: 41%;
+  animation: orbit 14s linear infinite;
+}
+
+.small {
+  --size: clamp(34px, 4vw, 60px);
+  --depth: 8;
+  animation-duration: 7s;
+  top: 68%;
+  right: 15%;
+}
+
+.tiny {
+  --size: clamp(18px, 2vw, 30px);
+  --depth: 5;
+  top: 24%;
+  left: 24%;
+}
+
+.tiny .body {
+  background: radial-gradient(circle at 34% 28%, #ffd0c2, #f4776a 55%, #b23a45);
+  box-shadow: inset 0 0 0 1.5px rgb(110 30 50 / 0.5);
+}
+
+/* The trunk stands on a planet of its own; only its crown shows. */
+.globe {
+  width: max(150vw, 1500px);
+  aspect-ratio: 1;
+  background: linear-gradient(#5cc6d2, #a8d9c6 46px, #f6b38a 120px, #ef7a68 260px);
+  border-radius: 50%;
+  box-shadow:
+    inset 0 0 0 2px rgb(23 70 92 / 0.55),
+    inset 0 8px 0 -2px rgb(255 255 255 / 0.45),
+    0 0 70px rgb(120 230 225 / 0.35);
+  position: absolute;
+  top: calc(100% - var(--h) * 0.085);
+  left: 50%;
+  translate: -50% 0;
+}
+
+.scan {
+  pointer-events: none;
+  background: repeating-linear-gradient(rgb(0 0 0 / 0.13) 0 1px, transparent 1px 4px);
+  mix-blend-mode: multiply;
+  position: absolute;
+  inset: 0;
+}
+
+.scene {
+  width: calc(var(--h) / 1.5);
+  height: var(--h);
+  container-type: size;
+  position: absolute;
+  bottom: 0;
+  left: calc(50% - var(--h) / 3);
+}
+
+.rig {
+  translate: calc(var(--px) * -7px) calc(var(--py) * -5px);
+  transition: translate 0.5s var(--ease-out);
+  position: absolute;
+  inset: 0;
+}
+
+.tree {
+  width: 100%;
+  height: 100%;
+  display: block;
+  overflow: visible;
+}
+
+/* Clock: a disc behind the crown whose hands keep the visitor's time. */
+
+.clock {
+  width: 80cqw;
+  aspect-ratio: 1;
+  translate: calc(var(--px) * 9px) calc(var(--py) * 7px);
+  transition: translate 0.7s var(--ease-out);
+  animation: fade 1.2s both;
+  position: absolute;
+  top: 1.67cqw;
+  left: 10cqw;
+}
+
+.dial {
+  background:
+    radial-gradient(circle, transparent 40%, rgb(12 8 40 / 0.4)),
+    conic-gradient(#3a0d24, #0c1e4a 22%, #0b3a66 36%, #0e5a6a 46%, #c2452e 62%, #f08a3c 80%, #a3242b 93%, #3a0d24);
+  border-radius: 50%;
+  box-shadow:
+    0 0 0 1.5px rgb(246 197 138 / 0.4),
+    0 0 60px rgb(240 120 60 / 0.25);
+  animation: turn 240s linear infinite;
+  position: absolute;
+  inset: 3.3%;
+}
+
+.hands {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  inset: 0;
+}
+
+.hand {
+  opacity: 0;
+}
+
+.hands[data-ready] .hand {
+  opacity: 1;
+  transition: opacity 0.6s;
+}
+
+.hands[data-ready] .sweep {
+  opacity: 0.5;
+}
+
+.hour {
+  transform: rotate(var(--h));
+  animation: hour 43200s linear infinite;
+}
+
+.minute {
+  transform: rotate(var(--m));
+  animation: minute 3600s linear infinite;
+}
+
+.second {
+  transform: rotate(var(--s));
+  animation: second 60s steps(60) infinite;
+}
+
+.sweep {
+  transform: rotate(var(--s));
+  animation: second 60s linear infinite;
+}
+
+/* The tree grows in: trunk, then pipes, then what they carry. */
+
+.trunk {
+  transform-origin: 300px 900px;
+  animation: grow 0.9s var(--ease-out) both;
+}
+
+.pipe path {
+  stroke-dasharray: 1;
+  animation: draw 0.7s var(--ease-out) both;
+  animation-delay: calc(var(--i) * 60ms + 500ms);
+}
+
+.twinkle {
+  animation: twinkle calc(2.4s + var(--i) * 0.5s) ease-in-out infinite alternate;
+}
+
+.heart {
+  animation: twinkle 3s ease-in-out infinite alternate;
+}
+
+/* Title */
+
+.title {
+  z-index: 2;
+  text-align: center;
+  padding: 16px 20px 0;
+  position: relative;
+}
+
+.title h1 {
+  font-family: var(--font-round);
+  letter-spacing: -0.01em;
+  text-shadow:
+    -1.5px 0 rgb(255 80 90 / 0.6),
+    1.5px 0 rgb(80 230 255 / 0.6);
+  font-size: clamp(28px, 5vw, 44px);
+  font-weight: 600;
+  line-height: 1.05;
+}
+
+.title p {
+  color: #d5e6ff;
+  margin-top: 4px;
+  font-size: 13.5px;
+  line-height: 1.45;
+}
+
+.title .hint {
+  color: var(--color-mint);
+  font-family: var(--font-round);
+  margin-top: 2px;
+  font-weight: 500;
+}
+
+/* Platforms and orbs: glass capsules with their names on them. */
+
+.pill,
+.orb {
+  -webkit-tap-highlight-color: transparent;
+  color: #0b3346;
+  cursor: pointer;
+  font-family: var(--font-round);
+  background: linear-gradient(#4fc3d6, #a8d9c6 50%, #f6b38a);
+  border-radius: 999px;
+  box-shadow:
+    inset 0 0 0 2px rgb(23 70 92 / 0.5),
+    inset 0 0.9cqw 0 -0.3cqw rgb(255 255 255 / 0.5),
+    0 6px 18px rgb(8 30 60 / 0.35);
+  place-items: center;
+  font-weight: 600;
+  line-height: 1;
+  translate: -50% -50%;
+  transition:
+    scale 0.35s var(--spring),
+    filter 0.25s,
+    box-shadow 0.25s;
+  animation:
+    pop 0.6s var(--spring) backwards,
+    bob calc(5.5s + var(--i) * 0.4s) ease-in-out infinite alternate;
+  animation-delay:
+    calc(var(--i) * 80ms + 1000ms),
+    calc(var(--i) * -0.9s);
+  display: grid;
+  position: absolute;
+}
+
+.pill {
+  width: 30cqw;
+  height: 7.7cqw;
+  font-size: clamp(12px, 3.3cqw, 18px);
+}
+
+.orb {
+  width: 14cqw;
+  height: 14cqw;
+  background: radial-gradient(circle at 35% 28%, #c8f4ee, #5cc6d2 38%, #a8d9c6 62%, #f6b38a);
+  font-size: clamp(9.5px, 2.5cqw, 14px);
+}
+
+.hub {
+  width: 16cqw;
+  height: 16cqw;
+}
+
+.hub svg {
+  width: 44%;
+}
+
+.hub[aria-pressed="true"] {
+  box-shadow:
+    inset 0 0 0 2px rgb(23 70 92 / 0.5),
+    0 0 0 6px rgb(143 240 194 / 0.25),
+    0 0 34px rgb(143 240 194 / 0.8);
+}
+
+:is(.pill, .orb):is(:hover, :focus-visible) {
+  filter: brightness(1.1) saturate(1.1);
+  box-shadow:
+    inset 0 0 0 2px rgb(23 70 92 / 0.5),
+    inset 0 0.9cqw 0 -0.3cqw rgb(255 255 255 / 0.6),
+    0 0 26px rgb(170 255 230 / 0.75);
+  scale: 1.08;
+}
+
+:is(.pill, .orb):active {
+  scale: 0.96;
+}
+
+.eq {
+  align-items: end;
+  gap: 12%;
+  width: 46%;
+  height: 38%;
+  display: flex;
+}
+
+.eq i {
+  background: currentColor;
+  border-radius: 2px;
+  flex: 1;
+  height: 100%;
+  transform-origin: bottom;
+  animation: eq 0.9s ease-in-out infinite alternate;
+}
+
+.eq i:nth-child(2) {
+  animation-delay: -0.3s;
+}
+
+.eq i:nth-child(3) {
+  animation-delay: -0.6s;
+}
+
+.eq i:nth-child(4) {
+  animation-delay: -0.15s;
+}
+
+.bob {
+  animation: bob calc(5.5s + var(--i, 0) * 0.37s) ease-in-out infinite alternate;
+  animation-delay: calc(var(--i, 0) * -0.9s);
+}
+
+/* The music's player: on the page so it can play, but never seen. */
+
+.radio {
+  pointer-events: none;
+  opacity: 0;
+  width: 200px;
+  height: 113px;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+}
+
+.spark {
+  pointer-events: none;
+  fill: #d9fff0;
+  width: 44px;
+  height: 44px;
+  filter: drop-shadow(0 0 8px #8ff0c2);
+  margin: -22px 0 0 -22px;
+  animation: spark 0.8s var(--ease-out) forwards;
+  position: fixed;
+}
+
+/* Sheet: where a leaf's contents open. */
+
+.sheet {
+  width: min(100vw, 460px);
+  max-width: none;
+  height: 100dvh;
+  max-height: none;
+  color: var(--color-snow);
+  background: rgb(8 34 84 / 0.82);
+  -webkit-backdrop-filter: blur(22px);
+  backdrop-filter: blur(22px);
+  border-left: 1px solid rgb(255 255 255 / 0.14);
+  margin: 0 0 0 auto;
+  font-size: 14.5px;
+  line-height: 1.6;
+  overflow-y: auto;
+}
+
+.sheet[open] {
+  animation: slide 0.42s var(--ease-out);
+}
+
+.sheet::backdrop {
+  background: rgb(4 16 48 / 0.45);
+  animation: fade 0.3s;
+}
+
+.sheet-in {
+  gap: 16px;
+  min-height: 100%;
+  padding: 0 24px 40px;
+  display: grid;
+  align-content: start;
+}
+
+.sheet-head {
+  z-index: 1;
+  background: linear-gradient(rgb(8 34 84 / 0.96) 70%, transparent);
+  justify-content: space-between;
+  align-items: center;
+  margin: 0 -24px;
+  padding: 22px 24px 14px;
+  display: flex;
+  position: sticky;
+  top: 0;
+}
+
+.sheet h2 {
+  font-family: var(--font-round);
+  font-size: 30px;
+  font-weight: 600;
+  line-height: 1.1;
+}
+
+.sheet h3 {
+  font-family: var(--font-round);
+  font-size: 19px;
+  font-weight: 600;
+  line-height: 1.25;
+}
+
+.sheet-x {
+  cursor: pointer;
+  background: rgb(255 255 255 / 0.1);
+  border-radius: 50%;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  transition: background-color 0.2s;
+  display: grid;
+}
+
+.sheet-x:hover {
+  background: rgb(255 255 255 / 0.2);
+}
+
+.sheet-in > p {
+  color: #d3ecf2;
+  text-wrap: pretty;
+}
+
+.sheet a {
+  text-underline-offset: 4px;
+}
+
+.when {
+  color: var(--color-mint);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  font-family: var(--font-round);
+  font-size: 11.5px;
+  font-weight: 500;
+  line-height: 1.4;
+}
+
+.skills {
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: 18px 14px;
+  margin-top: 8px;
+  display: grid;
+}
+
+.skills ul {
+  color: #d3ecf2;
+  margin-top: 6px;
+}
+
+.cards,
+.rows {
+  gap: 14px;
+  display: grid;
+}
+
+.card,
+.rows > li {
+  background: rgb(255 255 255 / 0.06);
+  border: 1px solid rgb(255 255 255 / 0.1);
+  border-radius: 18px;
+  padding: 18px 18px 20px;
+  display: block;
+}
+
+.card {
+  transition:
+    background-color 0.2s,
+    border-color 0.2s,
+    transform 0.3s var(--ease-out);
+}
+
+a.card:hover {
+  background: rgb(255 255 255 / 0.1);
+  border-color: rgb(125 243 200 / 0.5);
+  transform: translateY(-2px);
+}
+
+.card h3,
+.rows h3 {
+  margin-top: 4px;
+}
+
+.card h3 span {
+  color: var(--color-coral);
+}
+
+.card > p:not(.when),
+.place,
+.points {
+  color: #c4e2ea;
+  font-size: 13.5px;
+}
+
+.card > p:not(.when) {
+  margin-top: 8px;
+}
+
+.pills {
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 14px;
+  display: flex;
+}
+
+.pills li {
+  color: var(--color-mint);
+  background: rgb(125 243 200 / 0.12);
+  border-radius: 999px;
+  padding: 3px 10px;
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.points {
+  gap: 5px;
+  margin-top: 12px;
+  display: grid;
+}
+
+.points li {
+  padding-left: 16px;
+  position: relative;
+}
+
+.points li:before {
+  content: "";
+  background: var(--color-coral);
+  border-radius: 50%;
+  width: 5px;
+  height: 5px;
+  position: absolute;
+  top: 0.62em;
+  left: 2px;
+}
+
+.info > div {
+  border-bottom: 1px solid rgb(255 255 255 / 0.12);
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 16px;
+  padding: 10px 0;
+  display: flex;
+}
+
+.info dd {
+  text-align: right;
+  overflow-wrap: anywhere;
+}
+
+.info a:hover {
+  text-decoration: underline;
+}
+
+.form {
+  gap: 14px;
+  margin-top: 8px;
+  display: grid;
+}
+
+.field {
+  gap: 6px;
+  display: grid;
+}
+
+.field label {
+  color: var(--color-haze);
+  font-size: 12.5px;
+}
+
+.field :is(input, textarea) {
+  background: rgb(255 255 255 / 0.07);
+  border: 1px solid rgb(255 255 255 / 0.14);
+  resize: vertical;
+  border-radius: 12px;
+  padding: 9px 12px;
+  transition: border-color 0.2s;
+}
+
+.field :is(input, textarea)::placeholder {
+  color: rgb(168 220 211 / 0.6);
+}
+
+.field :is(input, textarea):focus {
+  border-color: var(--color-mint);
+  outline: none;
+}
+
+.btn-row {
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+  display: flex;
+}
+
+.btn {
+  height: 40px;
+  color: var(--color-pine);
+  background: var(--color-mint);
+  cursor: pointer;
+  font-family: var(--font-round);
+  border-radius: 999px;
+  padding: 0 20px;
+  font-weight: 600;
+  transition:
+    background-color 0.2s,
+    transform 0.3s var(--spring);
+}
+
+.btn:hover {
+  background: #a5f8da;
+  transform: scale(1.04);
+}
+
+.form-note {
+  color: var(--color-haze);
+  font-size: 12.5px;
+}
+
+@media (min-width: 900px) {
+  .world {
+    --h: calc(var(--vh) - 8px);
+  }
+
+  .title {
+    text-align: left;
+    max-width: 300px;
+    padding: 32px 0 0 40px;
+    position: absolute;
+  }
+
+  .title p {
+    margin-top: 6px;
+    font-size: 14px;
+  }
+}
+
+@media (max-width: 899px) {
+  .ringed {
+    top: 38%;
+    left: -7%;
+  }
+
+  .warm {
+    top: 15%;
+    right: -3%;
+  }
+
+  .small {
+    top: 74%;
+    right: 2%;
+  }
+
+  .tiny {
+    top: 19%;
+    left: 9%;
+  }
+}
+
+@media (max-width: 599px) {
+  .sheet {
+    width: 100vw;
+    height: 86dvh;
+    border-top: 1px solid rgb(255 255 255 / 0.14);
+    border-left: 0;
+    border-radius: 24px 24px 0 0;
+    margin: auto 0 0;
+  }
+
+  .sheet[open] {
+    animation-name: lift;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .rig,
+  .clock {
+    translate: none;
+  }
+
+  .field,
+  .planet {
+    translate: none;
+  }
+
+  .nebula,
+  .shoot,
+  .planet,
+  .moon,
+  .dial,
+  .bob,
+  .twinkle,
+  .heart,
+  .eq i,
+  .trunk,
+  .pipe path {
+    animation: none;
+  }
+
+  .pill,
+  .orb,
+  .sheet[open] {
+    animation: fade 0.4s backwards;
+  }
+
+  .pill,
+  .orb,
+  .card,
+  .btn {
+    transition: none;
+  }
+}
+
+@keyframes drift {
+  to {
+    transform: translate(6vmax, 3vmax) scale(1.12);
+  }
+}
+
+@keyframes shoot {
+  0% {
+    opacity: 0;
+    translate: 0 0;
+  }
+  1.5% {
+    opacity: 1;
+  }
+  7%,
+  to {
+    opacity: 0;
+    translate: -420px 214px;
+  }
+}
+
+@keyframes orbit {
+  0% {
+    transform: rotate(0deg) translateX(calc(var(--size) * 0.78)) rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg) translateX(calc(var(--size) * 0.78)) rotate(-360deg);
+  }
+}
+
+@keyframes hour {
+  to {
+    transform: rotate(calc(var(--h) + 360deg));
+  }
+}
+
+@keyframes minute {
+  to {
+    transform: rotate(calc(var(--m) + 360deg));
+  }
+}
+
+@keyframes second {
+  to {
+    transform: rotate(calc(var(--s) + 360deg));
+  }
+}
+
+@keyframes turn {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes grow {
+  0% {
+    transform: scaleY(0);
+  }
+}
+
+@keyframes draw {
+  0% {
+    stroke-dashoffset: 1;
+  }
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes eq {
+  0% {
+    transform: scaleY(0.25);
+  }
+}
+
+@keyframes spark {
+  0% {
+    opacity: 1;
+    transform: scale(0.2) rotate(0deg);
+  }
+  to {
+    opacity: 0;
+    transform: scale(1.3) rotate(90deg);
+  }
+}
+
+@keyframes bob {
+  0% {
+    transform: translateY(-3px);
+  }
+  to {
+    transform: translateY(4px);
+  }
+}
+
+@keyframes twinkle {
+  0% {
+    opacity: 0.35;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes pop {
+  0% {
+    opacity: 0;
+    scale: 0.4;
+  }
+}
+
+@keyframes slide {
+  0% {
+    opacity: 0;
+    transform: translateX(40px);
+  }
+}
+
+@keyframes lift {
+  0% {
+    opacity: 0;
+    transform: translateY(40px);
+  }
+}
+
+@keyframes fade {
+  0% {
+    opacity: 0;
+  }
 }
